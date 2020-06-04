@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibraryApi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -16,6 +17,7 @@ namespace LibraryApiIntegrationTests.Books
         public GettingAllBooks(WebTestFixture factory)
         {
             Client = factory.CreateClient();
+
         }
 
         // Do we get a 200?
@@ -24,6 +26,7 @@ namespace LibraryApiIntegrationTests.Books
         {
             var response = await Client.GetAsync("/books");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
         }
 
         // Is it returning Json?
@@ -34,12 +37,15 @@ namespace LibraryApiIntegrationTests.Books
             Assert.Equal("application/json", response.Content.Headers.ContentType.MediaType);
         }
 
-        //Does it have the right data?
+
+        // does it have the right data?
         [Fact]
         public async Task HasTheRightData()
         {
             var response = await Client.GetAsync("/books");
+
             var data = await response.Content.ReadAsAsync<GetBooksResponse>();
+
             Assert.Equal(2, data.numberOfBooks);
 
             var firstBook = data.books.Single(b => b.id == 1);
@@ -51,11 +57,19 @@ namespace LibraryApiIntegrationTests.Books
         public async Task FilteringByGenre()
         {
             var response = await Client.GetAsync("/books?genre=Fantasy");
+
             var data = await response.Content.ReadAsAsync<GetBooksResponse>();
+
             Assert.Equal(1, data.numberOfBooks);
             Assert.Equal("Fantasy", data.genreFilter);
-
         }
+        // If we use a genre, does it filter?
+
+        // does it have the genre filter?
+
+        // does it have the correct count?
+
+
 
     }
 
